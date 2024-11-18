@@ -50,8 +50,8 @@ output "cloudtrail_log_group" {
 # --------------------------------------------------------------------------------------------------
 
 output "config_iam_role" {
-  description = "The IAM role used for delivering AWS Config records to CloudWatch Logs."
-  value       = aws_iam_role.recorder
+  description = "The IAM service-linked role used for delivering AWS Config records to CloudWatch Logs."
+  value       = aws_iam_service_linked_role.config
 }
 
 output "config_configuration_recorder" {
