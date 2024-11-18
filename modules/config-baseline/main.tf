@@ -8,6 +8,7 @@ data "aws_region" "current" {}
 resource "aws_sns_topic" "config" {
   name              = var.sns_topic_name
   kms_master_key_id = var.sns_topic_kms_master_key_id
+  signature_version = 2
 
   tags = var.tags
 }
