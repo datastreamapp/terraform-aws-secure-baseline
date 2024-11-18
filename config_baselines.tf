@@ -21,77 +21,17 @@ locals {
 }
 
 # --------------------------------------------------------------------------------------------------
-# Create an IAM Role for AWS Config recorder to publish results and send notifications.
-# Reference: https://docs.aws.amazon.com/config/latest/developerguide/gs-cli-prereq.html#gs-cli-create-iamrole
+# Create an IAM Service-Linked Role for AWS Config recorder to publish results and send notifications.
+# Requires S3, KMS, and SNS to be configured to allow config service to connect
+# References:
+# https://docs.aws.amazon.com/config/latest/developerguide/s3-bucket-policy.html
+# https://docs.aws.amazon.com/config/latest/developerguide/s3-kms-key-policy.html
+# https://docs.aws.amazon.com/config/latest/developerguide/sns-topic-policy.html
 # --------------------------------------------------------------------------------------------------
 
-data "aws_iam_policy_document" "recorder_assume_role_policy" {
+resource "aws_iam_service_linked_role" "config" {
   count = var.config_baseline_enabled ? 1 : 0
-
-  statement {
-    principals {
-      type        = "Service"
-      identifiers = ["config.amazonaws.com"]
-    }
-    actions = ["sts:AssumeRole"]
-  }
-}
-
-resource "aws_iam_role" "recorder" {
-  count = var.config_baseline_enabled ? 1 : 0
-
-  name               = var.config_iam_role_name
-  assume_role_policy = data.aws_iam_policy_document.recorder_assume_role_policy[0].json
-
-  permissions_boundary = var.permissions_boundary_arn
-
-  tags = var.tags
-}
-
-# See https://docs.aws.amazon.com/config/latest/developerguide/iamrole-permissions.html
-data "aws_iam_policy_document" "recorder_publish_policy" {
-  count = var.config_baseline_enabled ? 1 : 0
-
-  statement {
-    actions   = ["s3:GetBucketAcl", "s3:ListBucket"]
-    resources = [local.audit_log_bucket_arn]
-  }
-
-  statement {
-    actions   = ["s3:PutObject", "s3:PutObjectACl"]
-    resources = ["${local.audit_log_bucket_arn}/${var.config_s3_bucket_key_prefix != "" ? "${var.config_s3_bucket_key_prefix}/" : ""}AWSLogs/${var.aws_account_id}/*"]
-
-    condition {
-      test     = "StringLike"
-      variable = "s3:x-amz-acl"
-      values   = ["bucket-owner-full-control"]
-    }
-  }
-
-  statement {
-    actions   = ["sns:Publish"]
-    resources = [for topic in local.config_topics : topic.arn if topic != null]
-  }
-
-  statement {
-    actions   = ["kms:Decrypt", "kms:GenerateDataKey"]
-    resources = ["arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/${var.config_sns_topic_kms_master_key_id != null ? var.config_sns_topic_kms_master_key_id : ""}"]
-  }
-}
-
-resource "aws_iam_role_policy" "recorder_publish_policy" {
-  count = var.config_baseline_enabled ? 1 : 0
-
-  name   = var.config_iam_role_policy_name
-  role   = one(aws_iam_role.recorder[*].id)
-  policy = data.aws_iam_policy_document.recorder_publish_policy[0].json
-}
-
-resource "aws_iam_role_policy_attachment" "recorder_read_policy" {
-  count = var.config_baseline_enabled ? 1 : 0
-
-  role       = one(aws_iam_role.recorder[*].id)
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
+  aws_service_name = "config.amazonaws.com"
 }
 
 # --------------------------------------------------------------------------------------------------
@@ -108,7 +48,7 @@ module "config_baseline_ap-northeast-1" {
     aws = aws.ap-northeast-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -129,7 +69,7 @@ module "config_baseline_ap-northeast-2" {
     aws = aws.ap-northeast-2
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -150,7 +90,7 @@ module "config_baseline_ap-northeast-3" {
     aws = aws.ap-northeast-3
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -171,7 +111,7 @@ module "config_baseline_ap-south-1" {
     aws = aws.ap-south-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -192,7 +132,7 @@ module "config_baseline_ap-southeast-1" {
     aws = aws.ap-southeast-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -213,7 +153,7 @@ module "config_baseline_ap-southeast-2" {
     aws = aws.ap-southeast-2
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -234,7 +174,7 @@ module "config_baseline_ca-central-1" {
     aws = aws.ca-central-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -255,7 +195,7 @@ module "config_baseline_eu-central-1" {
     aws = aws.eu-central-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -276,7 +216,7 @@ module "config_baseline_eu-north-1" {
     aws = aws.eu-north-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -297,7 +237,7 @@ module "config_baseline_eu-west-1" {
     aws = aws.eu-west-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -318,7 +258,7 @@ module "config_baseline_eu-west-2" {
     aws = aws.eu-west-2
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -339,7 +279,7 @@ module "config_baseline_eu-west-3" {
     aws = aws.eu-west-3
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -360,7 +300,7 @@ module "config_baseline_sa-east-1" {
     aws = aws.sa-east-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -381,7 +321,7 @@ module "config_baseline_us-east-1" {
     aws = aws.us-east-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -402,7 +342,7 @@ module "config_baseline_us-east-2" {
     aws = aws.us-east-2
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -423,7 +363,7 @@ module "config_baseline_us-west-1" {
     aws = aws.us-west-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -444,7 +384,7 @@ module "config_baseline_us-west-2" {
     aws = aws.us-west-2
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
