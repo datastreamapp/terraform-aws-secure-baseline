@@ -202,6 +202,7 @@ resource "aws_sns_topic" "cloudtrail-sns-topic" {
 
   name              = var.cloudtrail_sns_topic_name
   kms_master_key_id = aws_kms_key.cloudtrail.id
+  signature_version = 2
 }
 
 data "aws_iam_policy_document" "cloudtrail-sns-policy" {
