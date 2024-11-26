@@ -196,7 +196,7 @@ module "config_baseline_ca-west-1" {
     aws = aws.ca-west-1
   }
 
-  iam_role_arn                  = one(aws_iam_role.recorder[*].arn)
+  iam_role_arn                  = one(aws_iam_service_linked_role.config[*].arn)
   s3_bucket_name                = local.audit_log_bucket_id
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
