@@ -129,7 +129,7 @@ module "guardduty_baseline_ca-central-1" {
 }
 
 module "guardduty_baseline_ca-west-1" {
-  count  = contains(var.target_regions, "cawest-1") && var.guardduty_enabled ? 1 : 0
+  count  = contains(var.target_regions, "ca-west-1") && var.guardduty_enabled ? 1 : 0
   source = "./modules/guardduty-baseline"
 
   providers = {
