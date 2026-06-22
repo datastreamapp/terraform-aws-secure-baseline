@@ -290,6 +290,18 @@ variable "config_s3_bucket_key_prefix" {
   default     = "config"
 }
 
+variable "config_s3_bucket_name" {
+  description = "The name of the S3 bucket for Config delivery. Must not have Object Lock default retention enabled. Defaults to audit_log_bucket_name when null."
+  type        = string
+  default     = null
+}
+
+variable "config_s3_kms_key_arn" {
+  description = "The ARN of the KMS key used to encrypt the Config delivery S3 bucket. Required when config_s3_bucket_name uses SSE-KMS."
+  type        = string
+  default     = null
+}
+
 variable "config_sns_topic_name" {
   description = "The name of the SNS Topic to be used to notify configuration changes."
   type        = string
