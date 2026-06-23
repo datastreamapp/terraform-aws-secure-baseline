@@ -50,7 +50,7 @@ module "config_baseline_ap-northeast-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -72,7 +72,7 @@ module "config_baseline_ap-northeast-2" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -94,7 +94,7 @@ module "config_baseline_ap-northeast-3" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -116,7 +116,7 @@ module "config_baseline_ap-south-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -138,7 +138,7 @@ module "config_baseline_ap-southeast-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -160,7 +160,7 @@ module "config_baseline_ap-southeast-2" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -182,7 +182,7 @@ module "config_baseline_ca-central-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -204,7 +204,7 @@ module "config_baseline_ca-west-1" {
   }
 
   iam_role_arn                  = one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -226,7 +226,7 @@ module "config_baseline_eu-central-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -248,7 +248,7 @@ module "config_baseline_eu-north-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -270,7 +270,7 @@ module "config_baseline_eu-west-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -292,7 +292,7 @@ module "config_baseline_eu-west-2" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -314,7 +314,7 @@ module "config_baseline_eu-west-3" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -336,7 +336,7 @@ module "config_baseline_sa-east-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -358,7 +358,7 @@ module "config_baseline_us-east-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -380,7 +380,7 @@ module "config_baseline_us-east-2" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -402,7 +402,7 @@ module "config_baseline_us-west-1" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency
@@ -424,7 +424,7 @@ module "config_baseline_us-west-2" {
   }
 
   iam_role_arn                  =one(aws_iam_service_linked_role.config[*].arn)
-  s3_bucket_name                = coalesce(var.config_s3_bucket_name, local.audit_log_bucket_id)
+  s3_bucket_name                = var.config_s3_bucket_name != null ? var.config_s3_bucket_name : local.audit_log_bucket_id
   s3_kms_key_arn                = var.config_s3_kms_key_arn
   s3_key_prefix                 = var.config_s3_bucket_key_prefix
   delivery_frequency            = var.config_delivery_frequency

@@ -297,7 +297,7 @@ variable "config_s3_bucket_name" {
 }
 
 variable "config_s3_kms_key_arn" {
-  description = "The ARN of the KMS key used to encrypt the Config delivery S3 bucket. Required when config_s3_bucket_name uses SSE-KMS."
+  description = "The ARN of the KMS key used to encrypt the Config delivery S3 bucket. Required when config_s3_bucket_name uses SSE-KMS. The key must be in the same region as the Config delivery bucket (not the Config recorder region)."
   type        = string
   default     = null
 }
