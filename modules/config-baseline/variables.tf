@@ -14,6 +14,12 @@ variable "s3_key_prefix" {
   default     = ""
 }
 
+variable "s3_kms_key_arn" {
+  description = "The ARN of the KMS key used to encrypt Config delivery to S3. Required when the destination bucket uses SSE-KMS."
+  type        = string
+  default     = null
+}
+
 variable "sns_topic_name" {
   description = "The name of the SNS Topic to be used to notify configuration changes."
   type        = string
